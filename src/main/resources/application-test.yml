@@ -19,3 +19,15 @@ spring:
         min-idle: 5
         max-idle: 20
         max-wait: 5000ms
+
+  mail:
+    host: smtp.zoho.com.cn
+    port: 465
+    protocol: smtp
+    username: kele@virgoo.cc
+    password: 1172477133wQ?
+    properties:
+      mail:
+        smtp:
+          ssl:
+            enable: true
