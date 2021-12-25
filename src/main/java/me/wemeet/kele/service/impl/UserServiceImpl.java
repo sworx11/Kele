@@ -30,13 +30,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public long countUserByEmail(String email) {
+        email = new String(Base64.getDecoder().decode(email), StandardCharsets.UTF_8);
         QueryWrapper<User> wrapper = new QueryWrapper<User>().eq("email", email);
         return count(wrapper);
     }
 
     @Override
     public long countUserByPhone(String phone) {
+        phone = new String(Base64.getDecoder().decode(phone), StandardCharsets.UTF_8);
         QueryWrapper<User> wrapper = new QueryWrapper<User>().eq("phone", phone);
+        return count(wrapper);
+    }
+
+    @Override
+    public long countUserByName(String name) {
+        QueryWrapper<User> wrapper = new QueryWrapper<User>().eq("name", name);
         return count(wrapper);
     }
 

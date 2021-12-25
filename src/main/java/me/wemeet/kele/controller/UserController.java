@@ -32,13 +32,19 @@ public class UserController {
     @GetMapping("verify/email")
     public KeleResponseEntity<Long> verifyEmail(String email) {
         long count = userService.countUserByEmail(email);
-        return KeleResponseEntity.ok(count);
+        return KeleResponseEntity.<Long>builder().ok(count).build();
     }
 
     @GetMapping("verify/phone")
     public KeleResponseEntity<Long> verifyPhone(String phone) {
         long count = userService.countUserByPhone(phone);
-        return KeleResponseEntity.ok(count);
+        return KeleResponseEntity.<Long>builder().ok(count).build();
+    }
+
+    @GetMapping("verify/name")
+    public KeleResponseEntity<Long> verifyName(String name) {
+        long count = userService.countUserByName(name);
+        return KeleResponseEntity.<Long>builder().ok(count).build();
     }
 
     @PostMapping("register")
@@ -47,9 +53,12 @@ public class UserController {
             userService.createUser(user.getEmail(), user.getName(), user.getPassword(), lang);
 
             commonService.deleteSignCode(user.getEmail());
-            return KeleResponseEntity.ok(user);
+            return KeleResponseEntity.<User>builder().ok(user).build();
         } else {
-            return new KeleResponseEntity<>(KeleResponseStatus.INSUFFICIENT_PERMISSION);
+            return KeleResponseEntity
+                    .<User>builder()
+                    .status(KeleResponseStatus.INSUFFICIENT_PERMISSION)
+                    .build();
         }
     }
 
@@ -60,15 +69,18 @@ public class UserController {
             String token = commonService.generateAccessToken(user.getId());
             Map<String, Object> ext = new HashMap<>();
             ext.put("token", token);
-            return new KeleResponseEntity<>(KeleResponseStatus.SUCCESS, user, ext);
+            return KeleResponseEntity.<User>builder().ok(user).ext(ext).build();
         } else {
-            return new KeleResponseEntity<>(KeleResponseStatus.LOGIN_ERROR);
+            return KeleResponseEntity
+                    .<User>builder()
+                    .status(KeleResponseStatus.LOGIN_ERROR)
+                    .build();
         }
     }
 
     @PostMapping("logout")
     public KeleResponseEntity<String> logout(User user) {
         commonService.deleteAccessToken(user.getId());
-        return KeleResponseEntity.ok();
+        return KeleResponseEntity.<String>builder().ok().build();
     }
 }

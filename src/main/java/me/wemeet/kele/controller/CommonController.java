@@ -17,7 +17,7 @@ public class CommonController {
     @GetMapping("verification/sign")
     public KeleResponseEntity<String> sendSignVerificationCode(String mailTo, String lang) {
         String code = common.sendSignVerificationCode(mailTo, lang);
-        return KeleResponseEntity.ok(code);
+        return KeleResponseEntity.<String>builder().ok(code).build();
     }
 
     @GetMapping("verification/sign/test")
@@ -25,15 +25,21 @@ public class CommonController {
         boolean test = common.testSignVerificationCode(mailTo, code);
         if (test) {
             common.deleteSignVerificationCode(mailTo);
-            return KeleResponseEntity.ok(common.generateSignCode(mailTo));
+            return KeleResponseEntity
+                    .<String>builder()
+                    .ok(common.generateSignCode(mailTo))
+                    .build();
         }
-        return new KeleResponseEntity<>(KeleResponseStatus.INSUFFICIENT_PERMISSION);
+        return KeleResponseEntity
+                .<String>builder()
+                .status(KeleResponseStatus.INSUFFICIENT_PERMISSION)
+                .build();
     }
 
     @GetMapping("verification/reset")
     public KeleResponseEntity<String> sendResetVerificationCode(String mailTo, String lang) {
         String code = common.sendResetVerificationCode(mailTo, lang);
-        return KeleResponseEntity.ok(code);
+        return KeleResponseEntity.<String>builder().ok(code).build();
     }
 
     @GetMapping("verification/reset/test")
@@ -41,8 +47,14 @@ public class CommonController {
         boolean test = common.testResetVerificationCode(mailTo, code);
         if (test) {
             common.deleteResetVerificationCode(mailTo);
-            return KeleResponseEntity.ok(common.generateResetCode(mailTo));
+            return KeleResponseEntity
+                    .<String>builder()
+                    .ok(common.generateResetCode(mailTo))
+                    .build();
         }
-        return new KeleResponseEntity<>(KeleResponseStatus.INSUFFICIENT_PERMISSION);
+        return KeleResponseEntity
+                .<String>builder()
+                .status(KeleResponseStatus.INSUFFICIENT_PERMISSION)
+                .build();
     }
 }

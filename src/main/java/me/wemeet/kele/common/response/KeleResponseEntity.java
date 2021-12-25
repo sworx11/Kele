@@ -15,48 +15,76 @@ public class KeleResponseEntity<T> implements Serializable {
     private Map<String, Object> ext;
 
     public KeleResponseEntity() {
-        super();
+
     }
 
-    public KeleResponseEntity(KeleResponseStatus status) {
+    public KeleResponseEntity(int code, String message, T data, Map<String, Object> ext) {
         super();
-        this.code = status.code;
-        this.message = status.message;
-    }
-
-    public KeleResponseEntity(KeleResponseStatus status, T data) {
-        super();
-        this.code = status.code;
-        this.message = status.message;
-        this.data = data;
-    }
-
-    public KeleResponseEntity(KeleResponseStatus status, T data, Map<String, Object> ext) {
-        super();
-        this.code = status.code;
-        this.message = status.message;
+        this.code = code;
+        this.message = message;
         this.data = data;
         this.ext = ext;
     }
 
-    public static <T> KeleResponseEntity<T> ok() {
-        return new KeleResponseEntity<>(KeleResponseStatus.SUCCESS);
+    public static <T> Builder<T> builder() {
+        return new KeleResponseEntity.Builder<>();
     }
 
-    public static <T> KeleResponseEntity<T> ok(T data) {
-        return new KeleResponseEntity<>(KeleResponseStatus.SUCCESS, data);
-    }
+    public static class Builder<T> {
+        private int code;
+        private String message;
+        private T data;
+        private Map<String, Object> ext;
 
-    public static <T> KeleResponseEntity<T> ok(T data, Map<String, Object> ext) {
-        return new KeleResponseEntity<>(KeleResponseStatus.SUCCESS, data, ext);
-    }
+        Builder() {
 
-    public static <T> KeleResponseEntity<T> error() {
-        return new KeleResponseEntity<>(KeleResponseStatus.ERROR);
-    }
+        }
 
-    public static <T> KeleResponseEntity<T> error(T data) {
-        return new KeleResponseEntity<>(KeleResponseStatus.SUCCESS, data);
+        public Builder<T> ok() {
+            this.code = KeleResponseStatus.SUCCESS.code;
+            this.message = KeleResponseStatus.SUCCESS.message;
+            return this;
+        }
+
+        public Builder<T> ok(T data) {
+            this.code = KeleResponseStatus.SUCCESS.code;
+            this.message = KeleResponseStatus.SUCCESS.message;
+            this.data = data;
+            return this;
+        }
+
+        public Builder<T> ext(Map<String, Object> ext) {
+            this.ext = ext;
+            return this;
+        }
+
+        public Builder<T> error() {
+            this.code = KeleResponseStatus.ERROR.code;
+            this.message = KeleResponseStatus.ERROR.message;
+            return this;
+        }
+
+        public Builder<T> error(T data) {
+            this.code = KeleResponseStatus.ERROR.code;
+            this.message = KeleResponseStatus.ERROR.message;
+            this.data = data;
+            return this;
+        }
+
+        public Builder<T> status(KeleResponseStatus status) {
+            this.code = status.code;
+            this.message = status.message;
+            return this;
+        }
+
+        public Builder<T> entity(T data) {
+            this.data = data;
+            return this;
+        }
+
+        public KeleResponseEntity<T> build() {
+            return new KeleResponseEntity<>(this.code, this.message, this.data, this.ext);
+        }
     }
 
 }
