@@ -1,6 +1,6 @@
 package me.wemeet.kele.common.response;
 
-public enum ResponseStatus {
+public enum KeleResponseStatus {
 
     SUCCESS(200, "成功"),
     ERROR(500, "系统请求错误"),
@@ -24,7 +24,7 @@ public enum ResponseStatus {
     public final int code;
     public final String message;
 
-    ResponseStatus(int code, String message) {
+    KeleResponseStatus(int code, String message) {
         this.code = code;
         this.message = message;
     }

@@ -12,5 +12,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2021-12-04
  */
 public interface IUserService extends IService<User> {
-
+    long countUserByEmail(String email);
+    long countUserByPhone(String phone);
+    void createUser(String email, String name, String password, String lang);
+    User login(User user);
 }
