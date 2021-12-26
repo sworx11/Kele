@@ -68,12 +68,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         }
 
         if (user.getEmail() != null && !user.getEmail().isBlank()) {
-            wrapper.eq("email", user.getEmail());
+            String email = new String(Base64.getDecoder().decode(user.getEmail()), StandardCharsets.UTF_8);
+            wrapper.eq("email", email);
             return getOne(wrapper);
         }
 
         if (user.getPhone() != null && !user.getPhone().isBlank()) {
-            wrapper.eq("phone", user.getPhone());
+            String phone = new String(Base64.getDecoder().decode(user.getPhone()), StandardCharsets.UTF_8);
+            wrapper.eq("phone", phone);
             return getOne(wrapper);
         }
 
