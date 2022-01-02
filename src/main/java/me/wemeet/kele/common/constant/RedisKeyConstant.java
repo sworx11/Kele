@@ -7,5 +7,5 @@ public class RedisKeyConstant {
     public static final String VERIFICATION_CODE_RESET = "VERIFICATION_CODE_RESET";
     public static final String RESET_CODE = "RESET_CODE";
 
-    public static String ACCESS_TOKEN = "ACCESS_TOKEN";
+    public static final String ACCESS_TOKEN = "ACCESS_TOKEN";
 }
