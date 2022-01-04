@@ -15,8 +15,13 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/music/api")
 public class MusicApiController {
-    @Autowired
+
     private ISourceService sourceService;
+
+    @Autowired
+    public void setSourceService(ISourceService sourceService) {
+        this.sourceService = sourceService;
+    }
 
     @GetMapping("/tx")
     public String getTxMusicUrl(String data) {

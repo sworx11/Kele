@@ -2,6 +2,10 @@ package me.wemeet.kele.entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,15 +23,43 @@ public class Song implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Long  id;
+    @TableId
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    private Long id;
 
-    private String mid;
+    private String songmid;
 
     private String source;
 
-    private Long changeBy;
+    private String singer;
 
-    private LocalDateTime changeDate;
+    @TableField("`name`")
+    private String name;
 
+    private String albumName;
+
+    private String albumId;
+
+    private String albumMid;
+
+    private String strMediaMid;
+
+    @TableField("`interval`")
+    private int interval;
+
+    private String songId;
+
+    private String copyrightId;
+
+    private String img;
+
+    private String lrc;
+
+    private String lrcUrl;
+
+    @TableField("`hash`")
+    private String hash;
+
+    private String types;
 
 }

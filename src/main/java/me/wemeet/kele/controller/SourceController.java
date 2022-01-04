@@ -19,8 +19,12 @@ import java.util.List;
 @RequestMapping("/source")
 public class SourceController {
 
-    @Autowired
     private ISourceService sourceService;
+
+    @Autowired
+    public void setSourceService(ISourceService sourceService) {
+        this.sourceService = sourceService;
+    }
 
     @GetMapping("ordered/weight")
     public List<Source> listAllOrderByWeight() {

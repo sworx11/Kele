@@ -19,12 +19,20 @@ public class CommonService {
     private static final long VERIFICATION_CODE_EXPIRE_TIME = 1800L;
     private static final long CODE_EXPIRE_TIME = 1800L;
 
+    private MailHelper mailHelper;
+    
     @Autowired
-    private MailHelper mail;
+    public void setMailHelper(MailHelper mailHelper) {
+        this.mailHelper = mailHelper;
+    }
+
+    private RedisHelper redisHelper;
 
     @Autowired
-    private RedisHelper redis;
-
+    public void setRedisHelper(RedisHelper redisHelper) {
+        this.redisHelper = redisHelper;
+    }
+    
     @Value("${aes.decryptKey}")
     private String decryptKey;
 
@@ -34,28 +42,28 @@ public class CommonService {
 
     public boolean testSignVerificationCode(String mailToBase64, String code) {
         String key = RedisKeyConstant.VERIFICATION_CODE_SIGN_UP + RedisKeyConstant.DELIMITER + mailToBase64;
-        return redis.hashKey(key) && code.equals(redis.get(key));
+        return redisHelper.hashKey(key) && code.equals(redisHelper.get(key));
     }
 
     public void deleteSignVerificationCode(String mailToBase64) {
         String key = RedisKeyConstant.VERIFICATION_CODE_SIGN_UP + RedisKeyConstant.DELIMITER + mailToBase64;
-        redis.del(key);
+        redisHelper.del(key);
     }
 
     public String generateSignCode(String mailToBase64) {
         String code = UUID.randomUUID().toString();
         String key = RedisKeyConstant.SIGN_UP_CODE + RedisKeyConstant.DELIMITER + mailToBase64;
-        redis.set(key, code, CODE_EXPIRE_TIME);
+        redisHelper.set(key, code, CODE_EXPIRE_TIME);
         return code;
     }
 
     public boolean testSignCode(String mailToBase64, String code) {
         String key = RedisKeyConstant.SIGN_UP_CODE + RedisKeyConstant.DELIMITER + mailToBase64;
-        return redis.hashKey(key) && code.equals(redis.get(key));
+        return redisHelper.hashKey(key) && code.equals(redisHelper.get(key));
     }
 
     public void deleteSignCode(String mailToBase64) {
-        redis.del(RedisKeyConstant.SIGN_UP_CODE + RedisKeyConstant.DELIMITER + mailToBase64);
+        redisHelper.del(RedisKeyConstant.SIGN_UP_CODE + RedisKeyConstant.DELIMITER + mailToBase64);
     }
 
     public String sendResetVerificationCode(String mailToBase64, String lang) {
@@ -64,28 +72,28 @@ public class CommonService {
 
     public boolean testResetVerificationCode(String mailToBase64, String code) {
         String key = RedisKeyConstant.VERIFICATION_CODE_RESET + RedisKeyConstant.DELIMITER + mailToBase64;
-        return redis.hashKey(key) && code.equals(redis.get(key));
+        return redisHelper.hashKey(key) && code.equals(redisHelper.get(key));
     }
 
     public void deleteResetVerificationCode(String mailToBase64) {
         String key = RedisKeyConstant.VERIFICATION_CODE_RESET + RedisKeyConstant.DELIMITER + mailToBase64;
-        redis.del(key);
+        redisHelper.del(key);
     }
 
     public String generateResetCode(String mailToBase64) {
         String code = UUID.randomUUID().toString();
         String key = RedisKeyConstant.RESET_CODE + RedisKeyConstant.DELIMITER + mailToBase64;
-        redis.set(key, code, CODE_EXPIRE_TIME);
+        redisHelper.set(key, code, CODE_EXPIRE_TIME);
         return code;
     }
 
     public boolean testResetCode(String mailToBase64, String code) {
         String key = RedisKeyConstant.RESET_CODE + RedisKeyConstant.DELIMITER + mailToBase64;
-        return redis.hashKey(key) && code.equals(redis.get(key));
+        return redisHelper.hashKey(key) && code.equals(redisHelper.get(key));
     }
 
     public void deleteResetCode(String mailToBase64) {
-        redis.del(RedisKeyConstant.RESET_CODE + RedisKeyConstant.DELIMITER + mailToBase64);
+        redisHelper.del(RedisKeyConstant.RESET_CODE + RedisKeyConstant.DELIMITER + mailToBase64);
     }
 
     public String generateAccessToken(Long userId) {
@@ -95,7 +103,7 @@ public class CommonService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        redis.hset(RedisKeyConstant.ACCESS_TOKEN, String.valueOf(userId), token);
+        redisHelper.hset(RedisKeyConstant.ACCESS_TOKEN, String.valueOf(userId), token);
         return token;
     }
 
@@ -104,7 +112,7 @@ public class CommonService {
         try {
             String temp = AesEncryptUtils.decrypt(token, decryptKey);
             String userId = temp.split(":")[0];
-            String _token = redis.hget(RedisKeyConstant.ACCESS_TOKEN, userId).toString();
+            String _token = redisHelper.hget(RedisKeyConstant.ACCESS_TOKEN, userId).toString();
             return token.equals(_token);
         } catch (Exception e) {
             return false;
@@ -112,8 +120,8 @@ public class CommonService {
     }
 
     public void deleteAccessToken(long userId) {
-        if (redis.hHasKey(RedisKeyConstant.ACCESS_TOKEN, String.valueOf(userId))) {
-            redis.hdel(RedisKeyConstant.ACCESS_TOKEN, String.valueOf(userId));
+        if (redisHelper.hHasKey(RedisKeyConstant.ACCESS_TOKEN, String.valueOf(userId))) {
+            redisHelper.hdel(RedisKeyConstant.ACCESS_TOKEN, String.valueOf(userId));
         }
     }
 
@@ -124,12 +132,12 @@ public class CommonService {
         String mailTo = new String(Base64.getDecoder().decode(mailToBase64), StandardCharsets.UTF_8);
         String subject = "zh".equalsIgnoreCase(lang) ? "验证码" : "Verification Code";
         try {
-            mail.sendMail(mailTo, subject, content, lang);
+            mailHelper.sendMail(mailTo, subject, content, lang);
         } catch (Exception e) {
             return null;
         }
 
-        if (redis.set(type + RedisKeyConstant.DELIMITER + mailToBase64, code, VERIFICATION_CODE_EXPIRE_TIME)) {
+        if (redisHelper.set(type + RedisKeyConstant.DELIMITER + mailToBase64, code, VERIFICATION_CODE_EXPIRE_TIME)) {
             return code;
         }
 

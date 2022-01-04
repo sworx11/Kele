@@ -23,11 +23,19 @@ import java.util.Map;
 @RequestMapping("/user")
 public class UserController {
 
-    @Autowired
     private IUserService userService;
 
     @Autowired
+    public void setUserService(IUserService userService) {
+        this.userService = userService;
+    }
+
     private CommonService commonService;
+
+    @Autowired
+    public void setCommonService(CommonService commonService) {
+        this.commonService = commonService;
+    }
 
     @GetMapping("verify/email")
     public KeleResponseEntity<Long> verifyEmail(String email) {

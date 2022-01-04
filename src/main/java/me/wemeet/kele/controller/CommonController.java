@@ -11,23 +11,28 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/common")
 public class CommonController {
+
+    private CommonService commonService;
+
     @Autowired
-    private CommonService common;
+    public void setCommonService(CommonService commonService) {
+        this.commonService = commonService;
+    }
 
     @GetMapping("verification/sign")
     public KeleResponseEntity<String> sendSignVerificationCode(String mailTo, String lang) {
-        String code = common.sendSignVerificationCode(mailTo, lang);
+        String code = commonService.sendSignVerificationCode(mailTo, lang);
         return KeleResponseEntity.<String>builder().ok(code).build();
     }
 
     @GetMapping("verification/sign/test")
     public KeleResponseEntity<String> testSignVerificationCode(String mailTo, String code) {
-        boolean test = common.testSignVerificationCode(mailTo, code);
+        boolean test = commonService.testSignVerificationCode(mailTo, code);
         if (test) {
-            common.deleteSignVerificationCode(mailTo);
+            commonService.deleteSignVerificationCode(mailTo);
             return KeleResponseEntity
                     .<String>builder()
-                    .ok(common.generateSignCode(mailTo))
+                    .ok(commonService.generateSignCode(mailTo))
                     .build();
         }
         return KeleResponseEntity
@@ -38,18 +43,18 @@ public class CommonController {
 
     @GetMapping("verification/reset")
     public KeleResponseEntity<String> sendResetVerificationCode(String mailTo, String lang) {
-        String code = common.sendResetVerificationCode(mailTo, lang);
+        String code = commonService.sendResetVerificationCode(mailTo, lang);
         return KeleResponseEntity.<String>builder().ok(code).build();
     }
 
     @GetMapping("verification/reset/test")
     public KeleResponseEntity<String> testResetVerificationCode(String mailTo, String code) {
-        boolean test = common.testResetVerificationCode(mailTo, code);
+        boolean test = commonService.testResetVerificationCode(mailTo, code);
         if (test) {
-            common.deleteResetVerificationCode(mailTo);
+            commonService.deleteResetVerificationCode(mailTo);
             return KeleResponseEntity
                     .<String>builder()
-                    .ok(common.generateResetCode(mailTo))
+                    .ok(commonService.generateResetCode(mailTo))
                     .build();
         }
         return KeleResponseEntity
