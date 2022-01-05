@@ -14,7 +14,7 @@ public class KeleResponseHeaderFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
                                     FilterChain filterChain) throws ServletException, IOException {
-        httpServletResponse.addHeader("copyright", "© 2021 Kele M.");
+        httpServletResponse.addHeader("copyright", "© 2021 - 2022 Kele Wemeet, LLC.");
         filterChain.doFilter(httpServletRequest, httpServletResponse);
     }
 }
