@@ -15,7 +15,7 @@ public class Generator {
     }
 
     public static void main(String[] args) {
-        FastAutoGenerator.create("jdbc:mysql://192.168.1.66:3306/lequ","root","1172477133wQ?")
+        FastAutoGenerator.create("jdbc:mysql://192.168.1.66:3306/kele","root","1172477133wQ?")
                 // 全局配置
                 .globalConfig((scanner, builder) -> builder.author(scanner.apply("请输入作者名称？")).fileOverride())
                 // 包配置

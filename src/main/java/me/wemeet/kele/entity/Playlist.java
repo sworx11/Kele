@@ -37,7 +37,8 @@ public class Playlist implements Serializable {
 
     private Long createBy;
 
-    private LocalDateTime createDate;
+    private LocalDateTime createAt;
 
+    private LocalDateTime updateAt;
 
 }

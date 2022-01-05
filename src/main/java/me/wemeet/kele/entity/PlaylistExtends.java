@@ -2,8 +2,6 @@ package me.wemeet.kele.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
-import java.time.LocalDateTime;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,12 +11,12 @@ import lombok.Setter;
  * </p>
  *
  * @author Quino Wu
- * @since 2021-12-04
+ * @since 2022-01-05
  */
 @Getter
 @Setter
-@TableName("playlist_song")
-public class PlaylistSong implements Serializable {
+@TableName("playlist_extends")
+public class PlaylistExtends implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -26,8 +24,9 @@ public class PlaylistSong implements Serializable {
 
     private Long playlistId;
 
-    private Long songId;
+    private Integer favorites;
 
-    private LocalDateTime createAt;
+    private Integer views;
+
 
 }
