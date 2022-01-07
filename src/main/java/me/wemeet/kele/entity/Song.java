@@ -57,6 +57,8 @@ public class Song implements Serializable {
 
     private String lrcUrl;
 
+    private String songUrl;
+
     @TableField("`hash`")
     private String hash;
 

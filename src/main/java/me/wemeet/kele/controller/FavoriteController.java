@@ -11,6 +11,7 @@ import me.wemeet.kele.service.ISongService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -64,10 +65,31 @@ public class FavoriteController {
         return KeleResponseEntity.<String>builder().ok(String.valueOf(song.getId())).build();
     }
 
+    @PostMapping("/batch")
+    public KeleResponseEntity<List<String>> batchDoFavorite(@RequestParam(name = "userId") String userId, @RequestBody List<Song> songs) {
+        List<String> ids = new ArrayList<>();
+        songs.forEach(song -> {
+            song = songService.insertOrUpdate(song);
+            Favorite favorite = new Favorite();
+            favorite.setSongId(song.getId());
+            favorite.setUserId(Long.parseLong(userId));
+            favoriteService.insertOrUpdate(favorite);
+            ids.add(String.valueOf(song.getId()));
+        });
+        return KeleResponseEntity.<List<String>>builder().ok(ids).build();
+    }
+
     @DeleteMapping("")
     public KeleResponseEntity<?> undoFavorite(String userId, String songmid, String source) {
         Song song = songService.getBySongmidAndSource(songmid, source);
         favoriteService.deleteByUserAndSong(Long.parseLong(userId), song.getId());
+        return KeleResponseEntity.builder().ok().build();
+    }
+
+    @DeleteMapping("/batch")
+    public KeleResponseEntity<?> batchUndoFavorite(String userId, @RequestBody List<Song> songs) {
+        long uid = Long.parseLong(userId);
+        songs.forEach(song -> favoriteService.deleteByUserAndSong(uid, song.getId()));
         return KeleResponseEntity.builder().ok().build();
     }
 }
