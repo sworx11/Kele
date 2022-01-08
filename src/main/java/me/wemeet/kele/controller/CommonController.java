@@ -20,9 +20,9 @@ public class CommonController {
     }
 
     @GetMapping("verification/sign")
-    public KeleResponseEntity<String> sendSignVerificationCode(String mailTo, String lang) {
+    public KeleResponseEntity<?> sendSignVerificationCode(String mailTo, String lang) {
         String code = commonService.sendSignVerificationCode(mailTo, lang);
-        return KeleResponseEntity.<String>builder().ok(code).build();
+        return KeleResponseEntity.builder().ok().build();
     }
 
     @GetMapping("verification/sign/test")
@@ -42,9 +42,9 @@ public class CommonController {
     }
 
     @GetMapping("verification/reset")
-    public KeleResponseEntity<String> sendResetVerificationCode(String mailTo, String lang) {
+    public KeleResponseEntity<?> sendResetVerificationCode(String mailTo, String lang) {
         String code = commonService.sendResetVerificationCode(mailTo, lang);
-        return KeleResponseEntity.<String>builder().ok(code).build();
+        return KeleResponseEntity.builder().ok().build();
     }
 
     @GetMapping("verification/reset/test")
