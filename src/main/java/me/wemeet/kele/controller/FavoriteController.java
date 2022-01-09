@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -66,17 +67,22 @@ public class FavoriteController {
     }
 
     @PostMapping("/batch")
-    public KeleResponseEntity<List<String>> batchDoFavorite(@RequestParam(name = "userId") String userId, @RequestBody List<Song> songs) {
-        List<String> ids = new ArrayList<>();
+    public KeleResponseEntity<?> batchDoFavorite(@RequestParam(name = "userId") String userId, @RequestBody List<Song> songs) {
+        List<Long> ids = new ArrayList<>();
         songs.forEach(song -> {
             song = songService.insertOrUpdate(song);
-            Favorite favorite = new Favorite();
-            favorite.setSongId(song.getId());
-            favorite.setUserId(Long.parseLong(userId));
-            favoriteService.insertOrUpdate(favorite);
-            ids.add(String.valueOf(song.getId()));
+            ids.add(song.getId());
         });
-        return KeleResponseEntity.<List<String>>builder().ok(ids).build();
+
+        long uid = Long.parseLong(userId);
+        List<Favorite> favorites = ids.stream().map(id -> {
+            Favorite f = new Favorite();
+            f.setUserId(uid);
+            f.setSongId(id);
+            return f;
+        }).collect(Collectors.toList());
+        favoriteService.batchInsertOrUpdate(favorites);
+        return KeleResponseEntity.builder().ok().build();
     }
 
     @DeleteMapping("")
@@ -89,7 +95,13 @@ public class FavoriteController {
     @DeleteMapping("/batch")
     public KeleResponseEntity<?> batchUndoFavorite(String userId, @RequestBody List<Song> songs) {
         long uid = Long.parseLong(userId);
-        songs.forEach(song -> favoriteService.deleteByUserAndSong(uid, song.getId()));
+        List<Favorite> favorites = songs.stream().map(song -> {
+            Favorite f = new Favorite();
+            f.setSongId(song.getId());
+            f.setUserId(uid);
+            return f;
+        }).collect(Collectors.toList());
+        favoriteService.batchDelete(favorites);
         return KeleResponseEntity.builder().ok().build();
     }
 }

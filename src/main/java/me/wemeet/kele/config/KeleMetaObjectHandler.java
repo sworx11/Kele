@@ -1,6 +1,7 @@
 package me.wemeet.kele.config;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
+import me.wemeet.kele.common.constant.KeleConstant;
 import me.wemeet.kele.common.util.KeleUtils;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
@@ -13,6 +14,7 @@ public class KeleMetaObjectHandler implements MetaObjectHandler {
     public void insertFill(MetaObject metaObject) {
         this.setFieldValByName("createAt", LocalDateTime.now(), metaObject);
         this.setFieldValByName("updateAt", LocalDateTime.now(), metaObject);
+        this.setFieldValByName("active", KeleConstant.ACTIVE, metaObject);
     }
 
     @Override

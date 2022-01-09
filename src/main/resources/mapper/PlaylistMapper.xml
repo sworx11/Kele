@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="me.wemeet.kele.mapper.PlaylistMapper">
-
+    <select id="listByFavorite" resultType="me.wemeet.kele.entity.Playlist">
+        SELECT p.*
+        FROM playlist_favorite LEFT JOIN playlist p
+        ON playlist_favorite.playlist_id = p.id AND playlist_favorite.user_id = #{userId}
+        ORDER BY playlist_favorite.create_at DESC
+    </select>
+    <select id="listSongsByPlaylist" resultType="me.wemeet.kele.entity.Song">
+        SELECT song.* FROM playlist_song LEFT JOIN song ON playlist_song.playlist_id = #{playlistId} AND playlist_song.song_id = song.id ORDER BY playlist_song.create_at DESC
+    </select>
 </mapper>

@@ -7,6 +7,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * <p>
  *  服务实现类
@@ -40,5 +44,28 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements IS
     @Override
     public Song getBySongmidAndSource(String songmid, String source) {
         return songMapper.getBySongmidAndSource(songmid, source);
+    }
+
+    @Override
+    public void batchInsertOrUpdate(List<Song> songs) {
+        List<Song> newSongs = new ArrayList<>();
+        List<Song> updateSongs = new ArrayList<>();
+        songs.forEach(song -> {
+            Song _song = songMapper.getBySongmidAndSource(song.getSongmid(), song.getSource());
+            if (_song == null) {
+                newSongs.add(song);
+            } else {
+                song.setId(_song.getId());
+                updateSongs.add(song);
+            }
+        });
+        saveBatch(newSongs, newSongs.size());
+        updateBatchById(updateSongs, updateSongs.size());
+    }
+
+    @Override
+    public List<Song> batchInsertOrUpdateReturnSong(List<Song> songs) {
+        songs = songs.stream().map(this::insertOrUpdate).collect(Collectors.toList());
+        return songs;
     }
 }

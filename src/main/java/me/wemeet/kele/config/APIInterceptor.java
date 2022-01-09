@@ -1,5 +1,6 @@
 package me.wemeet.kele.config;
 
+import me.wemeet.kele.common.response.KeleResponseStatus;
 import me.wemeet.kele.service.CommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,10 +20,19 @@ public class APIInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String accessToken = request.getHeader("Access-Token");
-        if (accessToken == null || accessToken.isBlank()) return false;
-        return commonService.testAccessToken(accessToken);
+        boolean flag;
+        if (accessToken == null || accessToken.isBlank()) {
+            flag = false;
+        } else {
+            flag = commonService.testAccessToken(accessToken);
+        }
+        if (!flag) {
+            response.sendError(KeleResponseStatus.INSUFFICIENT_PERMISSION.code, KeleResponseStatus.INSUFFICIENT_PERMISSION.message);
+        }
+
+        return flag;
     }
 
 }

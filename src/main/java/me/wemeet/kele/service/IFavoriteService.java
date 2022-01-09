@@ -21,4 +21,6 @@ public interface IFavoriteService extends IService<Favorite> {
     List<Song> allFavoriteByUser(long userId);
     void insertOrUpdate(Favorite favorite);
     void deleteByUserAndSong(long userId, long songId);
+    void batchInsertOrUpdate(List<Favorite> favorites);
+    void batchDelete(List<Favorite> favorites);
 }

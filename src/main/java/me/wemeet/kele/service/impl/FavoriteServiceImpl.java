@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -49,5 +50,20 @@ public class FavoriteServiceImpl extends ServiceImpl<FavoriteMapper, Favorite> i
     @Override
     public void deleteByUserAndSong(long userId, long songId) {
         favoriteMapper.deleteByUserAndSong(userId, songId);
+    }
+
+    @Override
+    public void batchInsertOrUpdate(List<Favorite> favorites) {
+        List<Favorite> newFavorites = new ArrayList<>();
+        favorites.forEach(favorite -> {
+            int count = favoriteMapper.countByUserAndSong(favorite.getUserId(), favorite.getSongId());
+            if (count == 0) newFavorites.add(favorite);
+        });
+        saveBatch(newFavorites, favorites.size());
+    }
+
+    @Override
+    public void batchDelete(List<Favorite> favorites) {
+        favorites.forEach(favorite -> deleteByUserAndSong(favorite.getUserId(), favorite.getSongId()));
     }
 }
