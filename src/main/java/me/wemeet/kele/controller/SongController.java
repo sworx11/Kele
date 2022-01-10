@@ -5,11 +5,7 @@ import me.wemeet.kele.common.response.KeleResponseEntity;
 import me.wemeet.kele.entity.Song;
 import me.wemeet.kele.service.ISongService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -32,13 +28,13 @@ public class SongController {
     }
 
     @PostMapping("")
-    public KeleResponseEntity<?> saveSong(Song song) {
+    public KeleResponseEntity<?> saveSong(@RequestBody Song song) {
         songService.insertOrUpdate(song);
         return KeleResponseEntity.builder().ok().build();
     }
 
     @PostMapping("/batch")
-    public KeleResponseEntity<?> batchSaveSong(List<Song> songs) {
+    public KeleResponseEntity<?> batchSaveSong(@RequestBody List<Song> songs) {
         songService.batchInsertOrUpdate(songs);
         return KeleResponseEntity.builder().ok().build();
     }
