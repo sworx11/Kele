@@ -44,6 +44,7 @@ public class Playlist implements Serializable {
     @TableField(fill = FieldFill.INSERT)
     private String active;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long createBy;
 
     @TableField(fill = FieldFill.INSERT)

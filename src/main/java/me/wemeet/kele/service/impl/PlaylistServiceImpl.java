@@ -61,7 +61,8 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
         wrapper.lambda()
                 .eq(Playlist::getActive, KeleConstant.ACTIVE)
                 .eq(Playlist::getSource, "kl")
-                .eq(Playlist::getCreateBy, userId);
+                .eq(Playlist::getCreateBy, userId)
+                .orderByDesc(Playlist::getCreateAt);
 
         return playlistMapper.selectPage(page, wrapper);
     }
