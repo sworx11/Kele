@@ -2,11 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="me.wemeet.kele.mapper.FavoriteMapper">
     <select id="listFavoriteByUser" resultType="me.wemeet.kele.entity.Song">
-        SELECT song.* FROM favorite LEFT JOIN song ON favorite.user_id = #{userId} AND favorite.song_id = song.id ORDER BY favorite.create_at DESC
+        SELECT s.* FROM favorite f LEFT JOIN song s ON f.song_id = s.id WHERE f.user_id = #{userId} ORDER BY f.create_at DESC
     </select>
 
     <select id="allFavoriteByUser" resultType="me.wemeet.kele.entity.Song">
-        SELECT song.id, song.songmid, song.source FROM favorite LEFT JOIN song ON favorite.user_id = #{userId} AND favorite.song_id = song.id
+        SELECT s.id, s.songmid, s.source FROM favorite f LEFT JOIN song s ON f.song_id = s.id WHERE f.user_id = #{userId}
     </select>
 
     <select id="countByUserAndSong" resultType="java.lang.Integer">
