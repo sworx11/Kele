@@ -1,14 +1,13 @@
 package me.wemeet.kele.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import me.wemeet.kele.common.constant.KeleConstant;
 import me.wemeet.kele.entity.*;
-import me.wemeet.kele.mapper.PlaylistExtendsMapper;
-import me.wemeet.kele.mapper.PlaylistFavoriteMapper;
-import me.wemeet.kele.mapper.PlaylistMapper;
-import me.wemeet.kele.mapper.PlaylistSongMapper;
+import me.wemeet.kele.entity.dto.PlaylistDTO;
+import me.wemeet.kele.mapper.*;
 import me.wemeet.kele.service.IPlaylistService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,6 +80,7 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
             playlistExtends.setPlaylistId(playlist.getId());
             playlistExtends.setFavorites(0);
             playlistExtends.setViews(0);
+            playlistExtends.setPlays(0);
             playlistExtendsMapper.insert(playlistExtends);
         }
         return playlist;
@@ -119,6 +119,7 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
             favorite.setPlaylistId(playlist.getId());
             favorite.setUserId(userId);
             playlistFavoriteMapper.insert(favorite);
+            favoritePlaylist(playlist.getId());
         } else {
             playlist = insertOrUpdate(playlist);
             PlaylistFavorite favorite = new PlaylistFavorite();
@@ -177,5 +178,65 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
     @Override
     public List<Song> listSongsByPlaylist(long playlistId) {
         return playlistMapper.listSongsByPlaylist(playlistId);
+    }
+
+    @Override
+    public PlaylistDTO playlistDetail(long playlistId) {
+        Playlist playlist = getById(playlistId);
+        if (playlist == null) return null;
+
+        User user = playlistMapper.getUser(playlist.getCreateBy());
+
+        List<Song> songs = playlistMapper.listSongsByPlaylist(playlistId);
+
+        QueryWrapper<PlaylistExtends> wrapper = new QueryWrapper<>();
+        wrapper.lambda().eq(PlaylistExtends::getPlaylistId, playlistId);
+        PlaylistExtends ext = playlistExtendsMapper.selectOne(wrapper);
+
+
+        PlaylistDTO dto = new PlaylistDTO();
+        dto.setPlaylist(playlist);
+        dto.setSongs(songs);
+        dto.setExt(ext);
+        dto.setUser(user);
+        return dto;
+    }
+
+    @Override
+    public void viewPlaylist(long playlistId) {
+        QueryWrapper<PlaylistExtends> wrapper = new QueryWrapper<>();
+        wrapper.lambda().eq(PlaylistExtends::getPlaylistId, playlistId);
+        PlaylistExtends ext = playlistExtendsMapper.selectOne(wrapper);
+
+        if (ext != null) {
+            UpdateWrapper<PlaylistExtends> updater = new UpdateWrapper<>();
+            updater.lambda().set(PlaylistExtends::getViews, ext.getViews() + 1).eq(PlaylistExtends::getPlaylistId, playlistId);
+            playlistExtendsMapper.update(ext, updater);
+        }
+    }
+
+    @Override
+    public void playPlaylist(long playlistId) {
+        QueryWrapper<PlaylistExtends> wrapper = new QueryWrapper<>();
+        wrapper.lambda().eq(PlaylistExtends::getPlaylistId, playlistId);
+        PlaylistExtends ext = playlistExtendsMapper.selectOne(wrapper);
+
+        if (ext != null) {
+            UpdateWrapper<PlaylistExtends> updater = new UpdateWrapper<>();
+            updater.lambda().set(PlaylistExtends::getPlays, ext.getPlays() + 1).eq(PlaylistExtends::getPlaylistId, playlistId);
+            playlistExtendsMapper.update(ext, updater);
+        }
+    }
+
+    private void favoritePlaylist(long playlistId) {
+        QueryWrapper<PlaylistExtends> wrapper = new QueryWrapper<>();
+        wrapper.lambda().eq(PlaylistExtends::getPlaylistId, playlistId);
+        PlaylistExtends ext = playlistExtendsMapper.selectOne(wrapper);
+
+        if (ext != null) {
+            UpdateWrapper<PlaylistExtends> updater = new UpdateWrapper<>();
+            updater.lambda().set(PlaylistExtends::getFavorites, ext.getFavorites() + 1).eq(PlaylistExtends::getPlaylistId, playlistId);
+            playlistExtendsMapper.update(ext, updater);
+        }
     }
 }

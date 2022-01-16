@@ -33,5 +33,5 @@ public class PlaylistExtends implements Serializable {
 
     private Integer views;
 
-
+    private Integer plays;
 }

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import me.wemeet.kele.entity.Playlist;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import me.wemeet.kele.entity.Song;
+import me.wemeet.kele.entity.User;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -21,4 +22,5 @@ import java.util.List;
 public interface PlaylistMapper extends BaseMapper<Playlist> {
     IPage<Playlist> listByFavorite(Page<Playlist> page, long userId);
     List<Song> listSongsByPlaylist(long playlistId);
+    User getUser(long createBy);
 }

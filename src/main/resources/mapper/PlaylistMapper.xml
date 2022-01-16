@@ -11,4 +11,7 @@
     <select id="listSongsByPlaylist" resultType="me.wemeet.kele.entity.Song">
         SELECT s.* FROM playlist_song ps LEFT JOIN song s ON ps.song_id = s.id WHERE ps.playlist_id = #{playlistId} ORDER BY ps.create_at DESC
     </select>
+    <select id="getUser" resultType="me.wemeet.kele.entity.User">
+        SELECT u.id, u.name, u.nick_name, u.avatar_url FROM user u WHERE u.id = #{createBy}
+    </select>
 </mapper>

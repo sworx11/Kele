@@ -107,4 +107,22 @@ public class PlaylistController {
         List<Song> songs = playlistService.listSongsByPlaylist(Long.parseLong(playlistId));
         return KeleResponseEntity.<List<Song>>builder().ok(songs).build();
     }
+
+    @GetMapping("detail")
+    public KeleResponseEntity<PlaylistDTO> playlistDetail(String playlistId) {
+        PlaylistDTO dto = playlistService.playlistDetail(Long.parseLong(playlistId));
+        return KeleResponseEntity.<PlaylistDTO>builder().ok(dto).build();
+    }
+
+    @GetMapping("view")
+    public KeleResponseEntity<?> view(String playlistId) {
+        playlistService.viewPlaylist(Long.parseLong(playlistId));
+        return KeleResponseEntity.builder().ok().build();
+    }
+
+    @GetMapping("play")
+    public KeleResponseEntity<?> play(String playlistId) {
+        playlistService.playPlaylist(Long.parseLong(playlistId));
+        return KeleResponseEntity.builder().ok().build();
+    }
 }

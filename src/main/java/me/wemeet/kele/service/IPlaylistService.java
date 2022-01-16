@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import me.wemeet.kele.entity.Playlist;
 import com.baomidou.mybatisplus.extension.service.IService;
 import me.wemeet.kele.entity.Song;
+import me.wemeet.kele.entity.dto.PlaylistDTO;
 
 import java.util.List;
 
@@ -28,4 +29,7 @@ public interface IPlaylistService extends IService<Playlist> {
     void addSongsToKelePlayList(long playlistId, List<Long> ids);
     void removeSongsFromKelePlaylist(long playlistId, List<Long> ids);
     List<Song> listSongsByPlaylist(long playlistId);
+    PlaylistDTO playlistDetail(long playlistId);
+    void viewPlaylist(long playlistId);
+    void playPlaylist(long playlistId);
 }
