@@ -27,7 +27,6 @@ public class PlaylistExtends implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long id;
 
-    @TableId
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long playlistId;
 
