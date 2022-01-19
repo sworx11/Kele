@@ -16,4 +16,5 @@ import java.util.List;
 public interface ISourceService extends IService<Source> {
     List<Source> listAllOrderByWeight();
     String getCookieById(String id);
+    void updateCookie(String id, String cookie);
 }

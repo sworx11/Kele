@@ -52,4 +52,14 @@ public class SourceController {
         sourceService.removeById(entity);
         return entity;
     }
+
+    @GetMapping("cookie/{id}")
+    public String getCookie(@PathVariable String id) {
+        return sourceService.getCookieById(id);
+    }
+
+    @GetMapping("setCookie/{id}")
+    public void setCookie(@PathVariable String id, String cookie) {
+        sourceService.updateCookie(id, cookie);
+    }
 }

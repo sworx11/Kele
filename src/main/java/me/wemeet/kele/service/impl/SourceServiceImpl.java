@@ -2,6 +2,7 @@ package me.wemeet.kele.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import me.wemeet.kele.entity.Source;
 import me.wemeet.kele.mapper.SourceMapper;
 import me.wemeet.kele.service.ISourceService;
@@ -37,5 +38,14 @@ public class SourceServiceImpl extends ServiceImpl<SourceMapper, Source> impleme
             return "";
         }
         return sources.get(0).getCookie();
+    }
+
+    @Override
+    public void updateCookie(String id, String cookie) {
+        UpdateWrapper<Source> wrapper = new UpdateWrapper<>();
+        wrapper.lambda()
+                .set(Source::getCookie, cookie)
+                .eq(Source::getId, id);
+        update(wrapper);
     }
 }
