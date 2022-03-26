@@ -30,6 +30,6 @@ public interface IPlaylistService extends IService<Playlist> {
     void removeSongsFromKelePlaylist(long playlistId, List<Long> ids);
     List<Song> listSongsByPlaylist(long playlistId);
     PlaylistDTO playlistDetail(long playlistId);
-    void viewPlaylist(long playlistId);
-    void playPlaylist(long playlistId);
+    Playlist view(Playlist playlist);
+    void play(Playlist playlist);
 }

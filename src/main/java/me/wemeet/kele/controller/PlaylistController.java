@@ -114,15 +114,15 @@ public class PlaylistController {
         return KeleResponseEntity.<PlaylistDTO>builder().ok(dto).build();
     }
 
-    @GetMapping("view")
-    public KeleResponseEntity<?> view(String playlistId) {
-        playlistService.viewPlaylist(Long.parseLong(playlistId));
-        return KeleResponseEntity.builder().ok().build();
+    @PostMapping("view")
+    public KeleResponseEntity<Playlist> view(@RequestBody Playlist playlist) {
+        playlist = playlistService.view(playlist);
+        return KeleResponseEntity.<Playlist>builder().ok(playlist).build();
     }
 
-    @GetMapping("play")
-    public KeleResponseEntity<?> play(String playlistId) {
-        playlistService.playPlaylist(Long.parseLong(playlistId));
+    @PostMapping("play")
+    public KeleResponseEntity<?> play(@RequestBody Playlist playlist) {
+        playlistService.play(playlist);
         return KeleResponseEntity.builder().ok().build();
     }
 }

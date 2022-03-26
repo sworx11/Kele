@@ -114,18 +114,26 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
 
     @Override
     public void doFavorite(long userId, Playlist playlist) {
-        if ("kl".equals(playlist.getSource())) {
-            PlaylistFavorite favorite = new PlaylistFavorite();
-            favorite.setPlaylistId(playlist.getId());
-            favorite.setUserId(userId);
-            playlistFavoriteMapper.insert(favorite);
-            favoritePlaylist(playlist.getId());
-        } else {
+        if (playlist == null) return;
+
+        if (playlist.getId() == null || playlist.getId() == 0 && !playlist.getSource().equals("kl")) {
             playlist = insertOrUpdate(playlist);
-            PlaylistFavorite favorite = new PlaylistFavorite();
-            favorite.setPlaylistId(playlist.getId());
-            favorite.setUserId(userId);
-            playlistFavoriteMapper.insert(favorite);
+        }
+
+        if (playlist != null && playlist.getCreateBy() != userId) {
+            QueryWrapper<PlaylistFavorite> wrapper = new QueryWrapper<>();
+            wrapper.lambda()
+                    .eq(PlaylistFavorite::getUserId, userId)
+                    .eq(PlaylistFavorite::getPlaylistId, playlist.getId());
+
+            PlaylistFavorite favorite = playlistFavoriteMapper.selectOne(wrapper);
+            if (favorite == null) {
+                favorite = new PlaylistFavorite();
+                favorite.setPlaylistId(playlist.getId());
+                favorite.setUserId(userId);
+                playlistFavoriteMapper.insert(favorite);
+                initPlaylistExtends(playlist.getId(), KeleConstant.FAVORITE);
+            }
         }
     }
 
@@ -203,40 +211,54 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
     }
 
     @Override
-    public void viewPlaylist(long playlistId) {
-        QueryWrapper<PlaylistExtends> wrapper = new QueryWrapper<>();
-        wrapper.lambda().eq(PlaylistExtends::getPlaylistId, playlistId);
-        PlaylistExtends ext = playlistExtendsMapper.selectOne(wrapper);
+    public Playlist view(Playlist playlist) {
+        if (playlist == null) return new Playlist();
 
-        if (ext != null) {
-            UpdateWrapper<PlaylistExtends> updater = new UpdateWrapper<>();
-            updater.lambda().set(PlaylistExtends::getViews, ext.getViews() + 1).eq(PlaylistExtends::getPlaylistId, playlistId);
-            playlistExtendsMapper.update(ext, updater);
+        if (playlist.getId() == null || playlist.getId() == 0) {
+            playlist = insertOrUpdate(playlist);
         }
+
+        initPlaylistExtends(playlist.getId(), KeleConstant.VIEW);
+        return playlist;
     }
 
     @Override
-    public void playPlaylist(long playlistId) {
-        QueryWrapper<PlaylistExtends> wrapper = new QueryWrapper<>();
-        wrapper.lambda().eq(PlaylistExtends::getPlaylistId, playlistId);
-        PlaylistExtends ext = playlistExtendsMapper.selectOne(wrapper);
+    public void play(Playlist playlist) {
+        if (playlist == null) return;
 
-        if (ext != null) {
-            UpdateWrapper<PlaylistExtends> updater = new UpdateWrapper<>();
-            updater.lambda().set(PlaylistExtends::getPlays, ext.getPlays() + 1).eq(PlaylistExtends::getPlaylistId, playlistId);
-            playlistExtendsMapper.update(ext, updater);
+        if (playlist.getId() == null || playlist.getId() == 0) {
+            playlist = insertOrUpdate(playlist);
         }
+
+        initPlaylistExtends(playlist.getId(), KeleConstant.PLAY);
     }
 
-    private void favoritePlaylist(long playlistId) {
+    private void initPlaylistExtends(long playlistId, String type) {
         QueryWrapper<PlaylistExtends> wrapper = new QueryWrapper<>();
         wrapper.lambda().eq(PlaylistExtends::getPlaylistId, playlistId);
         PlaylistExtends ext = playlistExtendsMapper.selectOne(wrapper);
 
-        if (ext != null) {
-            UpdateWrapper<PlaylistExtends> updater = new UpdateWrapper<>();
-            updater.lambda().set(PlaylistExtends::getFavorites, ext.getFavorites() + 1).eq(PlaylistExtends::getPlaylistId, playlistId);
-            playlistExtendsMapper.update(ext, updater);
+        if (ext == null) {
+            ext = new PlaylistExtends();
+            ext.setPlaylistId(playlistId);
+            ext.setFavorites(type.equals(KeleConstant.FAVORITE) ? 1 : 0);
+            ext.setViews(type.equals(KeleConstant.VIEW) ? 1 : 0);
+            ext.setPlays(type.equals(KeleConstant.PLAY) ? 1 : 0);
+        } else {
+            switch (type) {
+                case KeleConstant.FAVORITE:
+                    ext.setFavorites(ext.getFavorites() + 1);
+                    break;
+                case KeleConstant.VIEW:
+                    ext.setViews(ext.getViews() + 1);
+                    break;
+                case KeleConstant.PLAY:
+                    ext.setPlays(ext.getPlays() + 1);
+                    break;
+                default:
+                    break;
+            }
+            playlistExtendsMapper.updateById(ext);
         }
     }
 }

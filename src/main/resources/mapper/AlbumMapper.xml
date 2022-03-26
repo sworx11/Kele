@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.wemeet.kele.mapper.AlbumMapper">
+    <select id="listByFavorite" resultType="me.wemeet.kele.entity.Album">
+        SELECT a.*
+        FROM album_favorite af
+        LEFT JOIN album a ON af.album_id = a.id
+        WHERE af.user_id = #{userId}
+        ORDER BY af.create_at DESC
+    </select>
+</mapper>
