@@ -244,6 +244,7 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
             ext.setFavorites(type.equals(KeleConstant.FAVORITE) ? 1 : 0);
             ext.setViews(type.equals(KeleConstant.VIEW) ? 1 : 0);
             ext.setPlays(type.equals(KeleConstant.PLAY) ? 1 : 0);
+            playlistExtendsMapper.insert(ext);
         } else {
             switch (type) {
                 case KeleConstant.FAVORITE:

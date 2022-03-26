@@ -148,6 +148,7 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
             ext.setFavorites(type.equals(KeleConstant.FAVORITE) ? 1 : 0);
             ext.setViews(type.equals(KeleConstant.VIEW) ? 1 : 0);
             ext.setPlays(type.equals(KeleConstant.PLAY) ? 1 : 0);
+            albumExtendsMapper.insert(ext);
         } else {
             switch (type) {
                 case KeleConstant.FAVORITE:
