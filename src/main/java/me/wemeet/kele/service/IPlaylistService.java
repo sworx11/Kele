@@ -32,4 +32,5 @@ public interface IPlaylistService extends IService<Playlist> {
     PlaylistDTO playlistDetail(long playlistId);
     Playlist view(Playlist playlist);
     void play(Playlist playlist);
+    boolean isFavorite(long userId, String source, String mid);
 }

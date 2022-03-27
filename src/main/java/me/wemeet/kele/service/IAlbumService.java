@@ -23,4 +23,5 @@ public interface IAlbumService extends IService<Album> {
     void batchUnDoFavorite(long userId, List<Long> ids);
     Album view(Album album);
     void play(Album album);
+    boolean isFavorite(long userId, String source, String mid);
 }

@@ -137,6 +137,29 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
         initAlbumExtends(album.getId(), KeleConstant.PLAY);
     }
 
+    @Override
+    public boolean isFavorite(long userId, String source, String mid) {
+        QueryWrapper<Album> wrapper = new QueryWrapper<>();
+        wrapper.lambda()
+                .eq(Album::getSource, source)
+                .eq(Album::getMid, mid);
+
+        Album album = albumMapper.selectOne(wrapper);
+
+        if (album == null) {
+            return false;
+        }
+
+        QueryWrapper<AlbumFavorite> favoriteQueryWrapper = new QueryWrapper<>();
+        favoriteQueryWrapper.lambda()
+                .eq(AlbumFavorite::getAlbumId, album.getId())
+                .eq(AlbumFavorite::getUserId, userId);
+
+        long count = albumFavoriteMapper.selectCount(favoriteQueryWrapper);
+
+        return count > 0L;
+    }
+
     private void initAlbumExtends(long albumId, String type) {
         QueryWrapper<AlbumExtends> wrapper = new QueryWrapper<>();
         wrapper.lambda().eq(AlbumExtends::getAlbumId, albumId);

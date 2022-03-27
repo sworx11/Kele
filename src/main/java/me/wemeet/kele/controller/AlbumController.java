@@ -32,7 +32,10 @@ public class AlbumController {
     }
 
     @GetMapping("favorite")
-    public KeleResponseEntity<IPage<Album>> listByFavorite(String userId, int page, int limit) {
+    public KeleResponseEntity<IPage<Album>> listByFavorite(
+            String userId,
+            @RequestParam(name = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(name = "limit", required = false, defaultValue = "10") int limit) {
         IPage<Album> result = albumService.listByFavorite(new Page<>(page, limit), Long.parseLong(userId));
         return KeleResponseEntity.<IPage<Album>>builder().ok(result).build();
     }
@@ -65,5 +68,11 @@ public class AlbumController {
     public KeleResponseEntity<?> play(@RequestBody Album album) {
         albumService.play(album);
         return KeleResponseEntity.builder().ok().build();
+    }
+
+    @GetMapping("favored")
+    public KeleResponseEntity<Boolean> isFavorite(String userId, String source, String mid) {
+        Boolean result = albumService.isFavorite(Long.parseLong(userId), source, mid);
+        return KeleResponseEntity.<Boolean>builder().ok(result).build();
     }
 }

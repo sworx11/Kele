@@ -42,14 +42,20 @@ public class PlaylistController {
     }
 
     @GetMapping("")
-    public KeleResponseEntity<IPage<Playlist>> listByUser(String userId) {
-        IPage<Playlist> result = playlistService.listByUser(new Page<>(1, 20), Long.parseLong(userId));
+    public KeleResponseEntity<IPage<Playlist>> listByUser(
+            String userId,
+            @RequestParam(name = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(name = "limit", required = false, defaultValue = "10") int limit) {
+        IPage<Playlist> result = playlistService.listByUser(new Page<>(page, limit), Long.parseLong(userId));
         return KeleResponseEntity.<IPage<Playlist>>builder().ok(result).build();
     }
 
     @GetMapping("favorite")
-    public KeleResponseEntity<IPage<Playlist>> listByFavorite(String userId) {
-        IPage<Playlist> result = playlistService.listByFavorite(new Page<>(1, 20), Long.parseLong(userId));
+    public KeleResponseEntity<IPage<Playlist>> listByFavorite(
+            String userId,
+            @RequestParam(name = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(name = "limit", required = false, defaultValue = "10") int limit) {
+        IPage<Playlist> result = playlistService.listByFavorite(new Page<>(page, limit), Long.parseLong(userId));
         return KeleResponseEntity.<IPage<Playlist>>builder().ok(result).build();
     }
 
@@ -124,5 +130,11 @@ public class PlaylistController {
     public KeleResponseEntity<?> play(@RequestBody Playlist playlist) {
         playlistService.play(playlist);
         return KeleResponseEntity.builder().ok().build();
+    }
+
+    @GetMapping("favored")
+    public KeleResponseEntity<Boolean> isFavorite(String userId, String source, String mid) {
+        Boolean result = playlistService.isFavorite(Long.parseLong(userId), source, mid);
+        return KeleResponseEntity.<Boolean>builder().ok(result).build();
     }
 }

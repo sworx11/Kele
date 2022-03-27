@@ -1,7 +1,6 @@
 package me.wemeet.kele.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import me.wemeet.kele.common.constant.KeleConstant;
@@ -231,6 +230,29 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
         }
 
         initPlaylistExtends(playlist.getId(), KeleConstant.PLAY);
+    }
+
+    @Override
+    public boolean isFavorite(long userId, String source, String mid) {
+        QueryWrapper<Playlist> wrapper = new QueryWrapper<>();
+        wrapper.lambda()
+                .eq(Playlist::getMid, mid)
+                .eq(Playlist::getSource, source);
+
+        Playlist playlist = playlistMapper.selectOne(wrapper);
+
+        if (playlist == null) {
+            return false;
+        }
+
+        QueryWrapper<PlaylistFavorite> favoriteQueryWrapper = new QueryWrapper<>();
+        favoriteQueryWrapper.lambda()
+                .eq(PlaylistFavorite::getPlaylistId, playlist.getId())
+                .eq(PlaylistFavorite::getUserId, userId);
+
+        long count = playlistFavoriteMapper.selectCount(favoriteQueryWrapper);
+
+        return count > 0L;
     }
 
     private void initPlaylistExtends(long playlistId, String type) {
