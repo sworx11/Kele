@@ -119,7 +119,7 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
             playlist = insertOrUpdate(playlist);
         }
 
-        if (playlist != null && playlist.getCreateBy() != userId) {
+        if (playlist != null && (playlist.getCreateBy() == null || playlist.getCreateBy() != userId)) {
             QueryWrapper<PlaylistFavorite> wrapper = new QueryWrapper<>();
             wrapper.lambda()
                     .eq(PlaylistFavorite::getUserId, userId)
@@ -141,7 +141,7 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
         QueryWrapper<PlaylistFavorite> wrapper = new QueryWrapper<>();
         wrapper.lambda()
                 .eq(PlaylistFavorite::getPlaylistId, playlistId)
-                .eq(PlaylistFavorite::getId, userId);
+                .eq(PlaylistFavorite::getUserId, userId);
 
         playlistFavoriteMapper.delete(wrapper);
     }
@@ -150,7 +150,7 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
     public void batchUnDoFavorite(long userId, List<Long> ids) {
         QueryWrapper<PlaylistFavorite> wrapper = new QueryWrapper<>();
         wrapper.lambda()
-                .eq(PlaylistFavorite::getId, userId)
+                .eq(PlaylistFavorite::getUserId, userId)
                 .in(PlaylistFavorite::getPlaylistId, ids);
         playlistFavoriteMapper.delete(wrapper);
     }
@@ -235,9 +235,12 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
     @Override
     public boolean isFavorite(long userId, String source, String mid) {
         QueryWrapper<Playlist> wrapper = new QueryWrapper<>();
-        wrapper.lambda()
-                .eq(Playlist::getMid, mid)
-                .eq(Playlist::getSource, source);
+
+        if (source.equals("kl")) {
+            wrapper.lambda().eq(Playlist::getSource, source).eq(Playlist::getId, Long.parseLong(mid));
+        } else {
+            wrapper.lambda().eq(Playlist::getSource, source).eq(Playlist::getMid, mid);
+        }
 
         Playlist playlist = playlistMapper.selectOne(wrapper);
 
