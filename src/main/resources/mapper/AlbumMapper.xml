@@ -8,4 +8,7 @@
         WHERE af.user_id = #{userId}
         ORDER BY af.create_at DESC
     </select>
+    <select id="countFavorite" resultType="long">
+        SELECT COUNT(1) FROM album_favorite af, album a WHERE af.user_id = #{userId} and af.album_id = a.id and a.source = #{source} and a.mid = #{mid}
+    </select>
 </mapper>

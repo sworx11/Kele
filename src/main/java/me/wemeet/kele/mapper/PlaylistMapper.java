@@ -23,4 +23,6 @@ public interface PlaylistMapper extends BaseMapper<Playlist> {
     IPage<Playlist> listByFavorite(Page<Playlist> page, long userId);
     List<Song> listSongsByPlaylist(long playlistId);
     User getUser(long createBy);
+    long countFavorite(long userId, String source, String mid);
+    long countKlFavorite(long userId, long pid);
 }

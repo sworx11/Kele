@@ -14,4 +14,10 @@
     <select id="getUser" resultType="me.wemeet.kele.entity.User">
         SELECT u.id, u.name, u.nick_name, u.avatar_url FROM user u WHERE u.id = #{createBy}
     </select>
+    <select id="countFavorite" resultType="long">
+        SELECT COUNT(1) FROM playlist_favorite pf, playlist p WHERE pf.user_id = #{userId} and pf.playlist_id = p.id and p.source = #{source} and p.mid = #{mid}
+    </select>
+    <select id="countKlFavorite" resultType="long">
+        SELECT COUNT(1) FROM playlist_favorite pf WHERE pf.user_id = #{userId} and pf.playlist_id = #{pid}
+    </select>
 </mapper>

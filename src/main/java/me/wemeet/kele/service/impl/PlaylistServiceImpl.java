@@ -234,26 +234,13 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
 
     @Override
     public boolean isFavorite(long userId, String source, String mid) {
-        QueryWrapper<Playlist> wrapper = new QueryWrapper<>();
+        long count;
 
         if (source.equals("kl")) {
-            wrapper.lambda().eq(Playlist::getSource, source).eq(Playlist::getId, Long.parseLong(mid));
+            count = playlistMapper.countKlFavorite(userId, Long.parseLong(mid));
         } else {
-            wrapper.lambda().eq(Playlist::getSource, source).eq(Playlist::getMid, mid);
+            count = playlistMapper.countFavorite(userId, source, mid);
         }
-
-        Playlist playlist = playlistMapper.selectOne(wrapper);
-
-        if (playlist == null) {
-            return false;
-        }
-
-        QueryWrapper<PlaylistFavorite> favoriteQueryWrapper = new QueryWrapper<>();
-        favoriteQueryWrapper.lambda()
-                .eq(PlaylistFavorite::getPlaylistId, playlist.getId())
-                .eq(PlaylistFavorite::getUserId, userId);
-
-        long count = playlistFavoriteMapper.selectCount(favoriteQueryWrapper);
 
         return count > 0L;
     }

@@ -17,4 +17,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AlbumMapper extends BaseMapper<Album> {
     IPage<Album> listByFavorite(Page<Album> page, long userId);
+    long countFavorite(long userId, String source, String mid);
 }

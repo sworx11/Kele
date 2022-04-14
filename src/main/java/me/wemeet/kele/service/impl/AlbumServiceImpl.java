@@ -139,24 +139,7 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
 
     @Override
     public boolean isFavorite(long userId, String source, String mid) {
-        QueryWrapper<Album> wrapper = new QueryWrapper<>();
-        wrapper.lambda()
-                .eq(Album::getSource, source)
-                .eq(Album::getMid, mid);
-
-        Album album = albumMapper.selectOne(wrapper);
-
-        if (album == null) {
-            return false;
-        }
-
-        QueryWrapper<AlbumFavorite> favoriteQueryWrapper = new QueryWrapper<>();
-        favoriteQueryWrapper.lambda()
-                .eq(AlbumFavorite::getAlbumId, album.getId())
-                .eq(AlbumFavorite::getUserId, userId);
-
-        long count = albumFavoriteMapper.selectCount(favoriteQueryWrapper);
-
+        long count = albumMapper.countFavorite(userId, source, mid);
         return count > 0L;
     }
 
