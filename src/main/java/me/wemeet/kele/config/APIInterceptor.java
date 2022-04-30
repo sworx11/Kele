@@ -22,11 +22,16 @@ public class APIInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String accessToken = request.getHeader("Access-Token");
+        String path = request.getServletPath();
         boolean flag;
         if (accessToken == null || accessToken.isBlank()) {
             flag = false;
         } else {
-            flag = commonService.testAccessToken(accessToken);
+            if (path.startsWith("/admin")) {
+                flag = commonService.testAdminAccessToken(accessToken);
+            } else {
+                flag = commonService.testAccessToken(accessToken);
+            }
         }
         if (!flag) {
             response.sendError(KeleResponseStatus.INSUFFICIENT_PERMISSION.code, KeleResponseStatus.INSUFFICIENT_PERMISSION.message);

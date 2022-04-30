@@ -8,4 +8,6 @@ public class RedisKeyConstant {
     public static final String RESET_CODE = "RESET_CODE";
 
     public static final String ACCESS_TOKEN = "ACCESS_TOKEN";
+
+    public static final String ADMIN_ACCESS_TOKEN = "ADMIN_ACCESS_TOKEN";
 }

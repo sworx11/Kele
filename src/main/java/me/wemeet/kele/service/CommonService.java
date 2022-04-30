@@ -125,6 +125,35 @@ public class CommonService {
         }
     }
 
+    public boolean testAdminAccessToken(String token) {
+        if (token == null || token.isBlank()) return false;
+        try {
+            String temp = AesEncryptUtils.decrypt(token, decryptKey);
+            String userId = temp.split(":")[0];
+            String _token = redisHelper.hget(RedisKeyConstant.ADMIN_ACCESS_TOKEN, userId).toString();
+            return token.equals(_token);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public String generateAdminAccessToken(Long userId) {
+        String token = userId + ":" + UUID.randomUUID().toString().toUpperCase(Locale.ROOT);
+        try {
+            token = AesEncryptUtils.encrypt(token, decryptKey);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        redisHelper.hset(RedisKeyConstant.ADMIN_ACCESS_TOKEN, String.valueOf(userId), token, 1800);
+        return token;
+    }
+
+    public void deleteAdminAccessToken(long userId) {
+        if (redisHelper.hHasKey(RedisKeyConstant.ADMIN_ACCESS_TOKEN, String.valueOf(userId))) {
+            redisHelper.hdel(RedisKeyConstant.ADMIN_ACCESS_TOKEN, String.valueOf(userId));
+        }
+    }
+
     private String sentVerificationCode(String type, String mailToBase64, String lang) {
         String code = KeleUtils.generateVerificationCode();
         String content = KeleUtils.generateVerificationContent(code, lang);
@@ -143,4 +172,5 @@ public class CommonService {
 
         return null;
     }
+
 }

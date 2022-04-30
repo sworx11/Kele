@@ -7,4 +7,9 @@ public class KeleConstant {
     public static final String VIEW = "VIEW";
     public static final String FAVORITE = "FAVORITE";
 
+    public static final String[] ADMIN_PATHS = {
+            "/app-version",
+            "/app-notice",
+            ""
+    };
 }

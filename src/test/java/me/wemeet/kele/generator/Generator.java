@@ -15,16 +15,18 @@ public class Generator {
     }
 
     public static void main(String[] args) {
-        FastAutoGenerator.create("jdbc:mysql://192.168.1.66:3306/kele","root","1172477133wQ?")
+        FastAutoGenerator.create("jdbc:mysql://192.168.1.4:3306/kele","root","1172477133wQ?")
                 // 全局配置
-                .globalConfig((scanner, builder) -> builder.author(scanner.apply("请输入作者名称？")).fileOverride())
+                .globalConfig((builder) -> builder.author("Quino Wu").outputDir("D://MP"))
                 // 包配置
-                .packageConfig((scanner, builder) -> builder.parent(scanner.apply("请输入包名？")))
+                .packageConfig((builder) -> builder.parent("me.wemeet.kele"))
                 // 策略配置
                 .strategyConfig((scanner, builder) -> builder.addInclude(getTables(scanner.apply("请输入表名，多个英文逗号分隔？所有输入 all")))
                         .controllerBuilder().enableRestStyle().enableHyphenStyle()
                         .entityBuilder().enableLombok().addTableFills(
-                                new Column("create_time", FieldFill.INSERT)
+                                new Column("active", FieldFill.INSERT),
+                                new Column("create_at", FieldFill.INSERT),
+                                new Column("update_at", FieldFill.INSERT_UPDATE)
                         ).build())
                    .templateEngine(new FreemarkerTemplateEngine())
                 .execute();
