@@ -1,5 +1,6 @@
 package me.wemeet.kele.controller.admin;
 
+import me.wemeet.kele.common.response.KeleResponseEntity;
 import me.wemeet.kele.entity.Source;
 import me.wemeet.kele.service.ISourceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +19,19 @@ public class SourceAdminController {
     }
 
     @GetMapping("")
-    public List<Source> listAllSource() {
-        return sourceService.list();
+    public KeleResponseEntity<List<Source>> listAllSource() {
+        return KeleResponseEntity.<List<Source>>builder().ok(sourceService.list()).build();
     }
 
     @PostMapping("")
-    public Source saveSource(Source entity) {
+    public KeleResponseEntity<Source> saveSource(@RequestBody Source entity) {
         sourceService.saveOrUpdate(entity);
-        return entity;
+        return KeleResponseEntity.<Source>builder().ok(entity).build();
+    }
+
+    @DeleteMapping("")
+    public KeleResponseEntity<Source> deleteSource(@RequestBody Source entity) {
+        sourceService.removeById(entity);
+        return KeleResponseEntity.<Source>builder().ok(entity).build();
     }
 }

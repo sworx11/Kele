@@ -38,9 +38,9 @@ public class AppNotice implements Serializable {
 
     private String remark;
 
-    private Long createBy;
+    private String createBy;
 
-    private Long updateBy;
+    private String updateBy;
 
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createAt;
