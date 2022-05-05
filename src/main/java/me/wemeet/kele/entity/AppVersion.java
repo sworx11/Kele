@@ -36,9 +36,17 @@ public class AppVersion implements Serializable {
 
     private String versionCode;
 
-    private String updateHash;
+    private String versionName;
+
+    private String fileHash;
+
+    private int fileSize;
 
     private String updateLog;
+
+    private String platform;
+
+    private String updateStatus;
 
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateAt;

@@ -38,14 +38,14 @@ public class AppVersionServiceImpl extends ServiceImpl<AppVersionMapper, AppVers
     public List<AppVersion> listAllAppVersion() {
         QueryWrapper<AppVersion> wrapper = new QueryWrapper<>();
         wrapper.lambda()
-                .orderByDesc(AppVersion::getUpdateAt);
+                .orderByDesc(AppVersion::getId);
         return list(wrapper);
     }
 
     @Override
     public boolean isLatestAppVersion(String hash) {
         AppVersion item = getLatestAppVersion();
-        if (item == null || item.getUpdateHash() == null) return false;
-        return item.getUpdateHash().equals(hash);
+        if (item == null || item.getFileHash() == null) return false;
+        return item.getFileHash().equals(hash);
     }
 }
