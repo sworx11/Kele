@@ -15,7 +15,6 @@ import java.util.List;
  */
 public interface IAppVersionService extends IService<AppVersion> {
     void insertAppVersion(AppVersion appVersion);
-    AppVersion getLatestAppVersion();
+    AppVersion getLatestAppVersion(String platform);
     List<AppVersion> listAllAppVersion();
-    boolean isLatestAppVersion(String hash);
 }

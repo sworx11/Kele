@@ -26,8 +26,12 @@ public class AppVersionServiceImpl extends ServiceImpl<AppVersionMapper, AppVers
     }
 
     @Override
-    public AppVersion getLatestAppVersion() {
-        List<AppVersion> list = listAllAppVersion();
+    public AppVersion getLatestAppVersion(String platform) {
+        QueryWrapper<AppVersion> wrapper = new QueryWrapper<>();
+        wrapper.lambda()
+                .eq(AppVersion::getPlatform, platform)
+                .orderByDesc(AppVersion::getId);
+        List<AppVersion> list = list(wrapper);
         if (list != null && list.size() > 0) {
             return list.get(0);
         }
@@ -40,12 +44,5 @@ public class AppVersionServiceImpl extends ServiceImpl<AppVersionMapper, AppVers
         wrapper.lambda()
                 .orderByDesc(AppVersion::getId);
         return list(wrapper);
-    }
-
-    @Override
-    public boolean isLatestAppVersion(String hash) {
-        AppVersion item = getLatestAppVersion();
-        if (item == null || item.getFileHash() == null) return false;
-        return item.getFileHash().equals(hash);
     }
 }

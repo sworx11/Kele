@@ -33,8 +33,8 @@ public class AppVersionController {
     }
 
     @GetMapping("/latest")
-    public KeleResponseEntity<AppVersion> latestAppVersion() {
-        AppVersion appVersion = appVersionService.getLatestAppVersion();
+    public KeleResponseEntity<AppVersion> latestAppVersion(String platform) {
+        AppVersion appVersion = appVersionService.getLatestAppVersion(platform);
         return KeleResponseEntity.<AppVersion>builder().ok(appVersion).build();
     }
 }
