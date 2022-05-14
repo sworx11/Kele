@@ -40,4 +40,10 @@ public class AppNoticeAdminController {
         IPage<AppNotice> result = appNoticeService.listAllNotice(new Page<>(page, limit));
         return KeleResponseEntity.<IPage<AppNotice>>builder().ok(result).build();
     }
+
+    @DeleteMapping("")
+    public KeleResponseEntity<?> deleteFile(@RequestBody AppNotice notice) {
+        appNoticeService.removeById(notice.getId());
+        return KeleResponseEntity.builder().ok().build();
+    }
 }

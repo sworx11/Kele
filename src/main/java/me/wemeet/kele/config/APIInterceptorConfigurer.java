@@ -32,6 +32,8 @@ public class APIInterceptorConfigurer implements WebMvcConfigurer {
         excludePaths.add("/admin/logout");
         excludePaths.add("/app-version/**");
         excludePaths.add("/app-notice/**");
+        excludePaths.add("/file/**");
+        excludePaths.add("/config/**");
 
         registry.addInterceptor(apiInterceptor).excludePathPatterns(excludePaths);
     }

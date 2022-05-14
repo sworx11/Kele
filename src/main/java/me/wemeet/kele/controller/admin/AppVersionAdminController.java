@@ -37,4 +37,10 @@ public class AppVersionAdminController {
         List<AppVersion> list = appVersionService.listAllAppVersion();
         return KeleResponseEntity.<List<AppVersion>>builder().ok(list).build();
     }
+
+    @DeleteMapping("")
+    public KeleResponseEntity<?> deleteFile(@RequestBody AppVersion appVersion) {
+        appVersionService.removeById(appVersion.getId());
+        return KeleResponseEntity.builder().ok().build();
+    }
 }
