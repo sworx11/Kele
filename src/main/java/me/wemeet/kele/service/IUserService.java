@@ -17,4 +17,7 @@ public interface IUserService extends IService<User> {
     long countUserByName(String name);
     void createUser(String email, String name, String password, String lang);
     User login(User user);
+    void updateAvatar(Long userId, String avatarUrl);
+    void updateNick(Long userId, String nickName);
+    void updatePassword(Long userId, String password);
 }

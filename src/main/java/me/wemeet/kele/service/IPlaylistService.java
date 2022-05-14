@@ -33,4 +33,5 @@ public interface IPlaylistService extends IService<Playlist> {
     Playlist view(Playlist playlist);
     void play(Playlist playlist);
     boolean isFavorite(long userId, String source, String mid);
+    void updateCover(long userId, long playlistId, String coverUrl);
 }

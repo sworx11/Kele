@@ -1,6 +1,7 @@
 package me.wemeet.kele.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import me.wemeet.kele.common.constant.KeleConstant;
@@ -243,6 +244,13 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
         }
 
         return count > 0L;
+    }
+
+    @Override
+    public void updateCover(long userId, long playlistId, String coverUrl) {
+        UpdateWrapper<Playlist> wrapper = new UpdateWrapper<>();
+        wrapper.lambda().set(Playlist::getCoverUrl, coverUrl).eq(Playlist::getId, playlistId).eq(Playlist::getCreateBy, userId);
+        update(wrapper);
     }
 
     private void initPlaylistExtends(long playlistId, String type) {

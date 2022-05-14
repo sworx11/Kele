@@ -137,4 +137,10 @@ public class PlaylistController {
         Boolean result = playlistService.isFavorite(Long.parseLong(userId), source, mid);
         return KeleResponseEntity.<Boolean>builder().ok(result).build();
     }
+
+    @PostMapping("cover")
+    public KeleResponseEntity<?> updateCover(Playlist playlist) {
+        playlistService.updateCover(playlist.getCreateBy(), playlist.getId(), playlist.getCoverUrl());
+        return KeleResponseEntity.builder().ok().build();
+    }
 }

@@ -1,6 +1,7 @@
 package me.wemeet.kele.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import me.wemeet.kele.common.helper.RedisHelper;
 import me.wemeet.kele.common.util.KeleUtils;
 import me.wemeet.kele.entity.User;
@@ -84,5 +85,26 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         }
 
         return null;
+    }
+
+    @Override
+    public void updateAvatar(Long userId, String avatarUrl) {
+        UpdateWrapper<User> wrapper = new UpdateWrapper<>();
+        wrapper.lambda().set(User::getAvatarUrl, avatarUrl).eq(User::getId, userId);
+        update(wrapper);
+    }
+
+    @Override
+    public void updateNick(Long userId, String nikeName) {
+        UpdateWrapper<User> wrapper = new UpdateWrapper<>();
+        wrapper.lambda().set(User::getNickName, nikeName).eq(User::getId, userId);
+        update(wrapper);
+    }
+
+    @Override
+    public void updatePassword(Long userId, String password) {
+        UpdateWrapper<User> wrapper = new UpdateWrapper<>();
+        wrapper.lambda().set(User::getPassword, password).eq(User::getId, userId);
+        update(wrapper);
     }
 }

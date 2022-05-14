@@ -91,4 +91,31 @@ public class UserController {
         commonService.deleteAccessToken(user.getId());
         return KeleResponseEntity.<String>builder().ok().build();
     }
+
+    @PostMapping("password/reset")
+    public KeleResponseEntity<?> passwordReset(User user, @RequestParam(name = "resetCode") String resetCode) {
+        if (commonService.testResetCode(user.getEmail(), resetCode)) {
+            userService.updatePassword(user.getId(), user.getPassword());
+
+            commonService.deleteResetCode(user.getEmail());
+            return KeleResponseEntity.builder().ok().build();
+        } else {
+            return KeleResponseEntity
+                    .builder()
+                    .status(KeleResponseStatus.INSUFFICIENT_PERMISSION)
+                    .build();
+        }
+    }
+
+    @PostMapping("nickName")
+    public KeleResponseEntity<?> updateNickname(User user) {
+        userService.updateNick(user.getId(), user.getNickName());
+        return KeleResponseEntity.builder().ok().build();
+    }
+
+    @PostMapping("avatar")
+    public KeleResponseEntity<?> updateAvatar(User user) {
+        userService.updateNick(user.getId(), user.getAvatarUrl());
+        return KeleResponseEntity.builder().ok().build();
+    }
 }
