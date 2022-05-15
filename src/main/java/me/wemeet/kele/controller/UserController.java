@@ -115,7 +115,13 @@ public class UserController {
 
     @PostMapping("avatar")
     public KeleResponseEntity<?> updateAvatar(User user) {
-        userService.updateNick(user.getId(), user.getAvatarUrl());
+        userService.updateAvatar(user.getId(), user.getAvatarUrl());
+        return KeleResponseEntity.builder().ok().build();
+    }
+
+    @PostMapping("profile")
+    public KeleResponseEntity<?> updateUserProfile(User user) {
+        userService.updateById(user);
         return KeleResponseEntity.builder().ok().build();
     }
 }
