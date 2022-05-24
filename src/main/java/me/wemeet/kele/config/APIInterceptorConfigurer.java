@@ -35,6 +35,7 @@ public class APIInterceptorConfigurer implements WebMvcConfigurer {
         excludePaths.add("/app-notice/**");
         excludePaths.add("/file/**");
         excludePaths.add("/config/**");
+        excludePaths.add("/blur/**");
 
         registry.addInterceptor(apiInterceptor).excludePathPatterns(excludePaths);
     }
