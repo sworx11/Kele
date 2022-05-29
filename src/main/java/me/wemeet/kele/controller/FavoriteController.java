@@ -50,7 +50,13 @@ public class FavoriteController {
         return KeleResponseEntity.<IPage<Song>>builder().ok(result).build();
     }
 
-    @GetMapping("all")
+    @GetMapping("/list")
+    public KeleResponseEntity<List<Song>> listAllFavoriteByUser(String userId) {
+        List<Song> result = favoriteService.listFavoriteByUser(Long.parseLong(userId));
+        return KeleResponseEntity.<List<Song>>builder().ok(result).build();
+    }
+
+    @GetMapping("/all")
     public KeleResponseEntity<List<Song>> allFavoriteByUser(String userId) {
         List<Song> result = favoriteService.allFavoriteByUser(Long.parseLong(userId));
         return KeleResponseEntity.<List<Song>>builder().ok(result).build();

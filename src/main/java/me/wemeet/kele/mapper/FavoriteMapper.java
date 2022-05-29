@@ -20,6 +20,7 @@ import java.util.List;
 @Repository
 public interface FavoriteMapper extends BaseMapper<Favorite> {
     IPage<Song> listFavoriteByUser(Page<Song> page, long userId);
+    List<Song> listFavoriteByUser(long userId);
     int countByUserAndSong(long userId, long songId);
     void deleteByUserAndSong(long userId, long songId);
     List<Song> allFavoriteByUser(long userId);

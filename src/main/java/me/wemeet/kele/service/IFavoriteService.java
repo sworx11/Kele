@@ -18,6 +18,7 @@ import java.util.List;
  */
 public interface IFavoriteService extends IService<Favorite> {
     IPage<Song> listFavoriteByUser(Page<Song> page, long userId);
+    List<Song> listFavoriteByUser(long userId);
     List<Song> allFavoriteByUser(long userId);
     void insertOrUpdate(Favorite favorite);
     void deleteByUserAndSong(long userId, long songId);

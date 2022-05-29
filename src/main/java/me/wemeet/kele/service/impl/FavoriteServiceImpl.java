@@ -36,6 +36,11 @@ public class FavoriteServiceImpl extends ServiceImpl<FavoriteMapper, Favorite> i
     }
 
     @Override
+    public List<Song> listFavoriteByUser(long userId) {
+        return favoriteMapper.listFavoriteByUser(userId);
+    }
+
+    @Override
     public List<Song> allFavoriteByUser(long userId) {
         return favoriteMapper.allFavoriteByUser(userId);
     }
