@@ -80,14 +80,7 @@ public class FavoriteController {
             ids.add(song.getId());
         });
 
-        long uid = Long.parseLong(userId);
-        List<Favorite> favorites = ids.stream().map(id -> {
-            Favorite f = new Favorite();
-            f.setUserId(uid);
-            f.setSongId(id);
-            return f;
-        }).collect(Collectors.toList());
-        favoriteService.batchInsertOrUpdate(favorites);
+        favoriteService.batchFavorite(Long.parseLong(userId), ids);
         return KeleResponseEntity.builder().ok().build();
     }
 

@@ -1,5 +1,6 @@
 package me.wemeet.kele.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import me.wemeet.kele.entity.Favorite;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -58,17 +60,26 @@ public class FavoriteServiceImpl extends ServiceImpl<FavoriteMapper, Favorite> i
     }
 
     @Override
-    public void batchInsertOrUpdate(List<Favorite> favorites) {
-        List<Favorite> newFavorites = new ArrayList<>();
-        favorites.forEach(favorite -> {
-            int count = favoriteMapper.countByUserAndSong(favorite.getUserId(), favorite.getSongId());
-            if (count == 0) newFavorites.add(favorite);
-        });
-        saveBatch(newFavorites, favorites.size());
+    public void batchFavorite(long userId, List<Long> ids) {
+        List<Favorite> favorites = selectSongIdsByUser(userId);
+        List<Long> songs = favorites.stream().map(Favorite::getSongId).collect(Collectors.toList());
+        favorites = ids.stream().filter(id -> !songs.contains(id)).map(id -> {
+            Favorite entity = new Favorite();
+            entity.setSongId(id);
+            entity.setUserId(userId);
+            return entity;
+        }).collect(Collectors.toList());
+        saveBatch(favorites);
     }
 
     @Override
     public void batchDelete(List<Favorite> favorites) {
         favorites.forEach(favorite -> deleteByUserAndSong(favorite.getUserId(), favorite.getSongId()));
+    }
+
+    public List<Favorite> selectSongIdsByUser(long userId) {
+        QueryWrapper<Favorite> wrapper = new QueryWrapper<>();
+        wrapper.lambda().select(Favorite::getSongId).eq(Favorite::getUserId, userId);
+        return list(wrapper);
     }
 }

@@ -82,6 +82,16 @@ public class KeleResponseEntity<T> implements Serializable {
             return this;
         }
 
+        public Builder<T> code(int code) {
+            this.code = code;
+            return this;
+        }
+
+        public Builder<T> message(String message) {
+            this.message = message;
+            return this;
+        }
+
         public KeleResponseEntity<T> build() {
             return new KeleResponseEntity<>(this.code, this.message, this.data, this.ext);
         }
