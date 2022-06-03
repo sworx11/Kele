@@ -59,7 +59,7 @@ public class DuplicateController {
         this.albumFavoriteService = albumFavoriteService;
     }
 
-    @PostMapping("/")
+    @PostMapping("")
     public KeleResponseEntity<?> duplicate(@RequestParam(name = "userId") String userId, @RequestBody Duplicate duplicate) {
 
         if (userId == null || userId.isBlank()) {
